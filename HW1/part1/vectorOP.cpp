@@ -88,7 +88,6 @@ void clampedExpVector(float *values, int *exponents, float *output, int N)
 // You can assume VECTOR_WIDTH is a power of 2
 float arraySumVector(float *values, int N)
 {
-
   //
   // PP STUDENTS TODO: Implement your vectorized version of arraySumSerial here
   //
@@ -98,13 +97,19 @@ float arraySumVector(float *values, int N)
   float finalSum=0.0;
   for (int i = 0; i < N; i += VECTOR_WIDTH)
   { 
-    maskNumElements=_pp_init_ones(N - i); // all ones
     _pp_vload_float(orginVal, values + i, maskAll); 
-    _pp_hadd_float(orginVal,orginVal);
-    _pp_interleave_float(orginVal,orginVal);
+    int copyWidth=VECTOR_WIDTH;
+    while(copyWidth>2){
+      _pp_hadd_float(orginVal,orginVal);
+      _pp_interleave_float(orginVal,orginVal);
+      copyWidth/=2;
+    }
     _pp_hadd_float(orginVal,orginVal);
     _pp_vstore_float(values+i,orginVal,maskAll);
   }
+  // for (int i=0;i<N;i++){
+  //   printf("values: %f\n",*(values+i)); 
+  // }
   for (int i = 0; i < N; i += VECTOR_WIDTH){
     finalSum+=*(values+i);
   }

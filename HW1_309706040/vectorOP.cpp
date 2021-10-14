@@ -64,17 +64,17 @@ void clampedExpVector(float *values, int *exponents, float *output, int N)
     maskNumElements=_pp_init_ones(N - i); // all ones
     _pp_vload_int(singleExp,exponents+i,maskNumElements);
     _pp_vload_float(singleVal,values+i,maskNumElements);
-    // _pp_veq_int(finish,singleExp,intAllZero,maskNumElements);
-    // notfinish=_pp_mask_not(finish);
+    //_pp_veq_int(finish,singleExp,intAllZero,maskNumElements);
+    //notfinish=_pp_mask_not(finish);
     _pp_vgt_int(notfinish,singleExp,intAllZero,maskNumElements);
     result=_pp_vset_float(1.f);// all one at begining    
 
     while(_pp_cntbits(notfinish)){
       _pp_vmult_float(result,result,singleVal,notfinish);
       _pp_vsub_int(singleExp,singleExp,intAllOne,notfinish);//update singleExp
-      // _pp_veq_int(finish,singleExp,intAllZero,notfinish);
-      // notfinish=_pp_mask_not(finish);
-      _pp_vgt_int(notfinish,singleExp,intAllZero,notfinish);//maskNumElements?? //update not finish vector
+      //_pp_veq_int(finish,singleExp,intAllZero,notfinish);
+      //notfinish=_pp_mask_not(finish);
+      _pp_vgt_int(notfinish,singleExp,intAllZero,notfinish);//notfinish//maskNumElements?? //update not finish vector
     }
     //clampMask, initial 0, if greater than 9.999999f, becomes 1
     _pp_vgt_float(clampMask,result,clampBound,maskNumElements); 
@@ -92,10 +92,21 @@ float arraySumVector(float *values, int N)
   //
   // PP STUDENTS TODO: Implement your vectorized version of arraySumSerial here
   //
-
+  __pp_mask maskAll,maskNumElements; 
+  __pp_vec_float orginVal;
+  maskAll=_pp_init_ones();
+  float finalSum=0.0;
   for (int i = 0; i < N; i += VECTOR_WIDTH)
-  {
+  { 
+    maskNumElements=_pp_init_ones(N - i); // all ones
+    _pp_vload_float(orginVal, values + i, maskAll); 
+    _pp_hadd_float(orginVal,orginVal);
+    _pp_interleave_float(orginVal,orginVal);
+    _pp_hadd_float(orginVal,orginVal);
+    _pp_vstore_float(values+i,orginVal,maskAll);
   }
-
-  return 0.0;
+  for (int i = 0; i < N; i += VECTOR_WIDTH){
+    finalSum+=*(values+i);
+  }
+  return finalSum;
 }
