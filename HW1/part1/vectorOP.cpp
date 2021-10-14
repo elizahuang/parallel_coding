@@ -58,22 +58,25 @@ void clampedExpVector(float *values, int *exponents, float *output, int N)
 
   __pp_mask maskAll,notfinish,maskNumElements,clampMask,finish; 
   maskAll=_pp_init_ones();
+  // notfinish = _pp_init_ones(0);
   printf("N: %d\n",N); 
   for (int i = 0; i < N; i += VECTOR_WIDTH)
   {
     maskNumElements=_pp_init_ones(N - i); // all ones
     _pp_vload_int(singleExp,exponents+i,maskNumElements);
     _pp_vload_float(singleVal,values+i,maskNumElements);
-    //_pp_veq_int(finish,singleExp,intAllZero,maskNumElements);
+    //_pp_veq_int(finish,singleExp,intAllZero,maskAll);//maskNumElements
     //notfinish=_pp_mask_not(finish);
-    _pp_vgt_int(notfinish,singleExp,intAllZero,maskNumElements);
+    
+    _pp_vgt_int(notfinish,singleExp,intAllZero,maskAll);//maskNumElements
     result=_pp_vset_float(1.f);// all one at begining    
 
-    while(_pp_cntbits(notfinish)){
+    while(_pp_cntbits(notfinish)){    
       _pp_vmult_float(result,result,singleVal,notfinish);
       _pp_vsub_int(singleExp,singleExp,intAllOne,notfinish);//update singleExp
       //_pp_veq_int(finish,singleExp,intAllZero,notfinish);
       //notfinish=_pp_mask_not(finish);
+      
       _pp_vgt_int(notfinish,singleExp,intAllZero,notfinish);//notfinish//maskNumElements?? //update not finish vector
     }
     //clampMask, initial 0, if greater than 9.999999f, becomes 1
