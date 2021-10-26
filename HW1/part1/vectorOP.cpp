@@ -74,7 +74,7 @@ void clampedExpVector(float *values, int *exponents, float *output, int N)
     while(_pp_cntbits(notfinish)){    
       _pp_vmult_float(result,result,singleVal,notfinish);
       _pp_vsub_int(singleExp,singleExp,intAllOne,notfinish);//update singleExp
-      //_pp_veq_int(finish,singleExp,intAllZero,notfinish);
+      //_pp_veq_int(finish,singleExp,intAllZero,maskAll);//notfinish
       //notfinish=_pp_mask_not(finish);
       
       _pp_vgt_int(notfinish,singleExp,intAllZero,notfinish);//notfinish//maskNumElements?? //update not finish vector
