@@ -28,22 +28,24 @@ extern void mandelbrotSerial(
 // Thread entrypoint.
 void workerThreadStart(WorkerArgs *const args)
 {
-    
-
-    '''
-    int numOfSecRows = args->height / args->numThreads;
-    int start = args->threadId * numOfSecRows;
-    double startTime = CycleTimer::currentSeconds();
-    mandelbrotSerial(
-        args->x0, args->y0, args->x1, args->y1, 
-        args->width, args->height, start, numOfSecRows, 
-        args->maxIterations, args->output
-    );   
-    double endTime = CycleTimer::currentSeconds();
-    double minSerial = 1e30; 
-    minSerial=std::min(minSerial, endTime - startTime);
-    printf("thread %d exe time: [%.3f] ms \n", args->threadId,minSerial * 1000);
-    '''
+    int partition = args->height / args->numThreads;
+    int remain = args->height % args->numThreads;
+    for(int i=0;i<partition;i++){
+        int start = i*(args->numThreads)+args->threadId;
+        mandelbrotSerial(
+            args->x0, args->y0, args->x1, args->y1, 
+            args->width, args->height, start, 1, 
+            args->maxIterations, args->output
+        );   
+    }
+    if((args->threadId+1)<=remain){
+        int start=partition*(args->numThreads)+args->threadId;
+        mandelbrotSerial(
+            args->x0, args->y0, args->x1, args->y1, 
+            args->width, args->height, start, 1, 
+            args->maxIterations, args->output
+        );   
+    }    
 }
 
 //

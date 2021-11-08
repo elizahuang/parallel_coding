@@ -46,7 +46,7 @@ void workerThreadStart(WorkerArgs *const args)
     double minSerial = 1e30; 
     minSerial=std::min(minSerial, endTime - startTime);
     printf("thread %d exe time: [%.3f] ms \n", args->threadId,minSerial * 1000);
-    // printf("Hello world from thread %d\n", args->threadId);
+
 }
 
 //

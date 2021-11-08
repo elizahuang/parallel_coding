@@ -1,8 +1,8 @@
 .PHONY: clean
-pi.out : hw0_monteCarlo_c.o
-	gcc -o pi.out hw0_monteCarlo_c.o
-hw0_monteCarlo_c.o : hw0_monteCarlo.c
-	gcc -c hw0_monteCarlo.c -o hw0_monteCarlo_c.o
+pi.out : pi.o
+	gcc -o pi.out pi.o -lpthread
+pi.o : pi.c
+	gcc -c pi.c -o pi.o -lpthread
 
 clean:
 	rm *.o
