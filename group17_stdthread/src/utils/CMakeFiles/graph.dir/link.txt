@@ -1,0 +1,2 @@
+/usr/bin/ar.exe qc libgraph.a CMakeFiles/graph.dir/graph.cpp.o CMakeFiles/graph.dir/disjoint_set.cpp.o
+/usr/bin/ranlib.exe libgraph.a

@@ -1,0 +1,1 @@
+/usr/bin/c++.exe  -fopenmp -std=c++11 -fopenmp -std=c++11 -Wl,--enable-auto-import CMakeFiles/kruskal_ref.dir/kruskal_ref.cpp.o -o ../../bin/kruskal_ref.exe -Wl,--out-implib,libkruskal_ref.dll.a -Wl,--major-image-version,0,--minor-image-version,0   -L/usr/local/lib  -L/usr/local/opt/llvm/lib  ../utils/libgraph.a 
